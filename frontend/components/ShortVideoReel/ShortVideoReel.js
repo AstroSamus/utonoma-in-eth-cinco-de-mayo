@@ -13,6 +13,7 @@ export const ShortVideoReel = ($container) => {
   const $buttonNextShortVideo = $container.querySelector('#buttonNextShortVideo')
   const $buttonPreviousShortVideo = $container.querySelector('#buttonPreviousShortVideo')
   const $likesNumber = $container.querySelector('#likesNumber')
+  const $dislikesNumber = $container.querySelector('#dislikesNumber')
 
   const LikeButton = LikeButtonFactory($container.querySelector('#likeButtonContainer'))
   const DislikeButton = DislikeButtonFactory($container.querySelector('#dislikeButtonContainer'))
@@ -28,7 +29,7 @@ export const ShortVideoReel = ($container) => {
         try {
           if(state.detachedHead()) var nextShortVideo = state.shortVideoHistory()[state.currentVideo()]
           else nextShortVideo = await getShortVideo(state.shortVideoHistory())
-          const { authorAddress, contentId, metadata, likes, utonomaIdentifier } = nextShortVideo
+          const { authorAddress, contentId, metadata, likes, dislikes, utonomaIdentifier } = nextShortVideo
           $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
           $shortVideoPlayer.load()
           const playPromise = $shortVideoPlayer.play()
@@ -39,6 +40,7 @@ export const ShortVideoReel = ($container) => {
             LikeButton.updateUtonomaIdentifier(utonomaIdentifier)
             DislikeButton.updateUtonomaIdentifier(utonomaIdentifier)
             $likesNumber.innerHTML = likes
+            $dislikesNumber.innerHTML = dislikes
             loading(false)
             state.setStep(state.availiableSteps.informCorrectPlay, effects, nextShortVideo)
           }).catch((error) => {

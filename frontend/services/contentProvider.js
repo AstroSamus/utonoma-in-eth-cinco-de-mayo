@@ -19,7 +19,8 @@ export async function getShortVideo() {
       0: authorAddress, 
       1: contentIdInBytes32, 
       2: metadata, 
-      3: likes 
+      3: likes,
+      4: dislikes 
     } = await readOnlyProvider.utonomaContract.getContentById([identifier,5])
     const contentId = getIpfsHashFromBytes32(contentIdInBytes32)
     //if(contentId == '0x0') throw 'Content deleted'
@@ -28,6 +29,7 @@ export async function getShortVideo() {
       contentId,
       metadata,
       likes,
+      dislikes,
       utonomaIdentifier: { index: identifier, contentType: 5 }
     }
   } catch(error) {
