@@ -35,10 +35,9 @@ export const ConnectWallet = ($container) => {
         state.setIsButtonConnectWalletEnabled(true, () => {})
         loading(false)
       }
-    })
-    modal.subscribeProvider(({ address, isConnected }) => {
-      console.log('something happened with the provider')
-      if(isConnected) {
+      const isLoggedIn = modal.getIsConnectedState()
+      if(isLoggedIn) {
+        const address = modal.getAddress()
         setIsLoggedIn(true)
         setAddress(address)
         $connectWallet.style.display = 'none'

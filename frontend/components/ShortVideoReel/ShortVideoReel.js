@@ -25,7 +25,7 @@ export const ShortVideoReel = ($container) => {
         //if user is watching a previuos video then get the next one from the history, otherwise get a new one from the internet
         try {
           if(state.detachedHead()) var nextShortVideo = state.shortVideoHistory()[state.currentVideo()]
-          else nextShortVideo = await getShortVideo()
+          else nextShortVideo = await getShortVideo(state.shortVideoHistory())
           const { authorAddress, contentId, metadata, likes, utonomaIdentifier } = nextShortVideo
           $shortVideoPlayer.src = getUrlFromIpfsHash(contentId)
           $shortVideoPlayer.load()
@@ -33,11 +33,11 @@ export const ShortVideoReel = ($container) => {
           if (!playPromise) throw new Error('playPromise returned undefined')
           playPromise.then(() => {
             numberOfRetriesToGetShortVideo = 0
-            state.setStep(state.availiableSteps.informCorrectPlay, undefined, nextShortVideo)
             currentUtonomaIdentifier = utonomaIdentifier
             LikeButton.updateUtonomaIdentifier(utonomaIdentifier)
             $likesNumber.innerHTML = likes
             loading(false)
+            state.setStep(state.availiableSteps.informCorrectPlay, effects, nextShortVideo)
           }).catch((error) => {
             console.log(`Error when playing the short video. The message is: ${error}. Retry number ${numberOfRetriesToGetShortVideo}`)
             numberOfRetriesToGetShortVideo++
@@ -67,12 +67,22 @@ export const ShortVideoReel = ($container) => {
           $likesNumber.innerHTML = likes
           currentUtonomaIdentifier = utonomaIdentifier
           LikeButton.updateUtonomaIdentifier(utonomaIdentifier)
+          //Update the url to reflect the current video  
+          const { index } = currentUtonomaIdentifier
+          const newUrl = `${ window.location.pathname }?watch=${ index }`
+          window.history.pushState({}, '', newUrl)
         } catch(error) {
           console.log("Error when loading the previous short video", error)
           state.setStep(state.availiableSteps.nextShortVideo, effects) //On error, transition to the next video step
         }
         loading(false)
-        break 
+        break
+      case state.availiableSteps.informCorrectPlay:
+        //Update the url to reflect the current video  
+        const { index } = currentUtonomaIdentifier
+        const newUrl = `${window.location.pathname}?watch=${index}`
+        window.history.pushState({}, '', newUrl)
+        break
     }
   }
 

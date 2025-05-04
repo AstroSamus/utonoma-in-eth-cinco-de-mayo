@@ -1,13 +1,20 @@
 import { readOnlyProvider } from '../web3_providers/readOnlyProvider.js'
 import { formatUnits } from 'ethers'
 import { getIpfsHashFromBytes32 } from '../utils/encodingUtils/encodingUtils.js'
+import { getUniqueRandomNumberFromArray } from '../utils/generalUtils/generalUtils.js'
 
+const state = {
+  indexesOfSeenShortVideos: []
+}
 
 export async function getShortVideo() {
   //throw exception if the content id is 0
   try {
     const shortVideosLibraryLength = formatUnits(await readOnlyProvider.utonomaContract.getContentLibraryLength(5), 0)
-    const identifier = Math.floor(Math.random() * shortVideosLibraryLength)
+    if(state.indexesOfSeenShortVideos.length >= shortVideosLibraryLength) state.indexesOfSeenShortVideos = []
+    const identifier = getUniqueRandomNumberFromArray(shortVideosLibraryLength, state.indexesOfSeenShortVideos)
+    if(identifier !== null) state.indexesOfSeenShortVideos.push(identifier)
+    else throw new Error('indexesOfSeenShortVideos was not reseted correctly')
     const { 
       0: authorAddress, 
       1: contentIdInBytes32, 

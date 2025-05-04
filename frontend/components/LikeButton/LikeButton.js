@@ -17,7 +17,6 @@ export const LikeButton = ($container) => {
   let ConfirmLikeOrDislike
   let modal
   let currentFee
-  let ActivateForVoting
   let likeResult
 
   async function effects() {
@@ -32,7 +31,7 @@ export const LikeButton = ($container) => {
           const { modal: modalInstance } = await useSignedProvider()
           modal = modalInstance
         }
-        if(modal.getIsConnected()) state.setStep(state.availiableSteps.requestingFeeAcceptance, effects)
+        if(modal.getIsConnectedState()) state.setStep(state.availiableSteps.requestingFeeAcceptance, effects)
         else state.setStep(state.availiableSteps.userDisconnectedError, effects)
         break
       case state.availiableSteps.requestingFeeAcceptance:
@@ -42,17 +41,8 @@ export const LikeButton = ($container) => {
           ConfirmLikeOrDislike.updateFee(formatUnits(currentFee, 18))
           const confirmation = await ConfirmLikeOrDislike.askForUserConfirmation()
           if(!confirmation) loading(false) //user rejected
-          else state.setStep(state.availiableSteps.checkingUserAllowance, effects)
-        } catch (error) {
-          state.setStep(state.availiableSteps.genericError, effects)
-        }
-        break
-      case state.availiableSteps.checkingUserAllowance:
-        try {
-          const accountAllowance = await readOnlyProvider.genericRequests.getAllowance(modal.getAddress())
-          if(accountAllowance <= currentFee) state.setStep(state.availiableSteps.activatingAccount, effects)
           else state.setStep(state.availiableSteps.checkingAccountBalance, effects)
-        } catch(error) {
+        } catch (error) {
           state.setStep(state.availiableSteps.genericError, effects)
         }
         break
@@ -70,14 +60,14 @@ export const LikeButton = ($container) => {
           $dialogCheckWalletToApprove.showModal()
           const { utonomaContractForSignedTransactions } = await useUtonomaContractForSignedTransactions()
           likeResult = await utonomaContractForSignedTransactions.like([state.utonomaIdentifier().index, state.utonomaIdentifier().contentType])
-          state.setStep(state.availiableSteps.waitiingForBlockchainResult, effects)
+          state.setStep(state.availiableSteps.waitingForBlockchainResult, effects)
         } catch(error) {
           state.setStep(state.availiableSteps.genericError, effects)
         } finally {
           $dialogCheckWalletToApprove.close()
         }
         break
-      case state.availiableSteps.waitiingForBlockchainResult:
+      case state.availiableSteps.waitingForBlockchainResult:
         try {
           $dialogLikeContentTransactionSent.show()
           setTimeout(() => $dialogLikeContentTransactionSent.close(), 5000)
@@ -92,14 +82,6 @@ export const LikeButton = ($container) => {
       case state.availiableSteps.success:
         $dialogLikeButtonSuccess.show()
         setTimeout(() => $dialogLikeButtonSuccess.close(), 5000)
-        break
-      case state.availiableSteps.activatingAccount:
-        if(!ActivateForVoting) {
-          const { ActivateForVoting: ActivateForVotingFactory } = await import('../modals/ActivateForVoting/ActivateForVoting.js')
-          ActivateForVoting = ActivateForVotingFactory(document.querySelector('#activateForVoting'))
-        }
-        ActivateForVoting.openModal()
-        loading(false)
         break
       case state.availiableSteps.userDisconnectedError:
         const { setIsLoggedIn, setAddress } = await import('../../services/userManager/userManager.js')

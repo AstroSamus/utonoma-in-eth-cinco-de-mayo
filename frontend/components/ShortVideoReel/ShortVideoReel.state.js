@@ -20,7 +20,7 @@ export const createStateForShortVideoReel = () => {
       }
       this._detachedHead = value;  // Update the internal property
     },
-    currentStep: availiableSteps.fillingForm,
+    currentStep: availiableSteps.waiting,
   }
 
   function setStep(newState, effect, payload) {

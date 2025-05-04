@@ -47,7 +47,7 @@ export const UploadContentForm = ($container) => {
         break
       case state.availiableStates.checkingIfUserIsConnected:
         const { modal } = await useSignedProvider()
-        if(!modal.getIsConnected()) state.setState(state.availiableStates.userDisconnectedError, effects)
+        if(!modal.getIsConnectedState()) state.setState(state.availiableStates.userDisconnectedError, effects)
         else state.setState(state.availiableStates.uploadingToIpfs, effects)
         break
       case state.availiableStates.uploadingToIpfs:
