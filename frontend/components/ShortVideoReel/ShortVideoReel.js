@@ -4,6 +4,7 @@ import {
   createStateForShortVideoReel
 } from './ShortVideoReel.state.js'
 import { LikeButton as LikeButtonFactory } from '../LikeButton/LikeButton.js'
+import { DislikeButton as DislikeButtonFactory } from '../DislikeButton/DislikeButton.js'
 
 export const ShortVideoReel = ($container) => {
   const state = createStateForShortVideoReel()
@@ -13,7 +14,8 @@ export const ShortVideoReel = ($container) => {
   const $buttonPreviousShortVideo = $container.querySelector('#buttonPreviousShortVideo')
   const $likesNumber = $container.querySelector('#likesNumber')
 
-  const LikeButton = LikeButtonFactory($container.querySelector('#likeButtonContainer'))
+  const LikeButton = LikeButtonFactory()
+  const DislikeButton = DislikeButtonFactory()
 
   let currentUtonomaIdentifier
   let numberOfRetriesToGetShortVideo = 0 
