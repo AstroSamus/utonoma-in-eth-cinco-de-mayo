@@ -1,6 +1,0 @@
-[submodule "utonomaPWA"]
-	path = utonomaPWA
-	url = https://github.com/AstroSamus/utonomaPWA
-[submodule "utonoma"]
-	path = utonoma
-	url = https://github.com/AstroSamus/utonoma
