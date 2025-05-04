@@ -38,7 +38,7 @@ export const DislikeButton = () => {
       case state.availiableSteps.requestingFeeAcceptance:
         try {
           currentFee = await readOnlyProvider.genericRequests.getCurrentFee(modal.getAddress())
-          if(!ConfirmLikeOrDislike) ConfirmLikeOrDislike = ConfirmLikeOrDislikeFactory($container.querySelector('#dialogConfirmLikeOrDislike'))
+          if(!ConfirmLikeOrDislike) ConfirmLikeOrDislike = ConfirmLikeOrDislikeFactory(document.querySelector('#dialogConfirmLikeOrDislike'))
           ConfirmLikeOrDislike.updateFee(formatUnits(currentFee, 18))
           const confirmation = await ConfirmLikeOrDislike.askForUserConfirmation()
           if(!confirmation) loading(false) //user rejected
@@ -124,18 +124,17 @@ export const DislikeButton = () => {
 
   function loading(boolean) {
     if(boolean) {
-      $buttonLikeShortVideo.disabled = true
-      $buttonLikeShortVideo.style.visibility = 'hidden'
+      $buttonDislikeShortVideo.disabled = true
+      $buttonDislikeShortVideo.style.visibility = 'hidden'
     }
     else {
-      $buttonLikeShortVideo.disabled = false
-      $buttonLikeShortVideo.style.visibility = 'visible'
+      $buttonDislikeShortVideo.disabled = false
+      $buttonDislikeShortVideo.style.visibility = 'visible'
     }
   }
 
   $buttonDislikeShortVideo.addEventListener('click', () => {
-    //state.setStep(state.availiableSteps.pressingButton, effects)
-    console.log('Dislike button clicked')
+    state.setStep(state.availiableSteps.pressingButton, effects)
   })
 
   return {
