@@ -4,15 +4,15 @@ import { readOnlyProvider } from "../../web3_providers/readOnlyProvider.js"
 import { formatUnits } from 'ethers'
 import { useUtonomaContractForSignedTransactions } from '../../web3_providers/signedProvider.js'
 
-export const LikeButton = ($container) => { 
+export const LikeButton = () => { 
   const state = createStateForLikeButton()
 
-  const $buttonLikeShortVideo = $container.querySelector('#buttonLikeShortVideo')
-  const $dialogNotEnoughBalanceError = $container.querySelector('#dialogNotEnoughBalanceError')
+  const $buttonLikeShortVideo = document.querySelector('#buttonLikeShortVideo')
+  const $dialogNotEnoughBalanceError = document.querySelector('#dialogNotEnoughBalanceError')
   const $dialogCheckWalletToApprove = document.querySelector('#dialogCheckWalletToApprove')
-  const $dialogLikeContentTransactionSent = $container.querySelector('#dialogLikeContentTransactionSent')
-  const $dialogLikeButtonSuccess = $container.querySelector('#dialogLikeButtonSuccess')
-  const $dialogLikeButtonError = $container.querySelector('#dialogLikeButtonError')
+  const $dialogLikeContentTransactionSent = document.querySelector('#dialogLikeContentTransactionSent')
+  const $dialogLikeButtonSuccess = document.querySelector('#dialogLikeButtonSuccess')
+  const $dialogLikeButtonError = document.querySelector('#dialogLikeButtonError')
 
   let ConfirmLikeOrDislike
   let modal
