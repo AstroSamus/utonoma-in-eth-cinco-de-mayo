@@ -4,6 +4,7 @@ import {
   createStateForShortVideoReel
 } from './ShortVideoReel.state.js'
 import { LikeButton as LikeButtonFactory } from '../LikeButton/LikeButton.js'
+import { DislikeButton as DislikeButtonFactory } from '../DislikeButton/DislikeButton.js'
 
 export const ShortVideoReel = ($container) => {
   const state = createStateForShortVideoReel()
@@ -14,6 +15,7 @@ export const ShortVideoReel = ($container) => {
   const $likesNumber = $container.querySelector('#likesNumber')
 
   const LikeButton = LikeButtonFactory($container.querySelector('#likeButtonContainer'))
+  const DislikeButton = DislikeButtonFactory($container.querySelector('#dislikeButtonContainer'))
 
   let currentUtonomaIdentifier
   let numberOfRetriesToGetShortVideo = 0 
@@ -35,6 +37,7 @@ export const ShortVideoReel = ($container) => {
             numberOfRetriesToGetShortVideo = 0
             currentUtonomaIdentifier = utonomaIdentifier
             LikeButton.updateUtonomaIdentifier(utonomaIdentifier)
+            DislikeButton.updateUtonomaIdentifier(utonomaIdentifier)
             $likesNumber.innerHTML = likes
             loading(false)
             state.setStep(state.availiableSteps.informCorrectPlay, effects, nextShortVideo)
@@ -67,6 +70,7 @@ export const ShortVideoReel = ($container) => {
           $likesNumber.innerHTML = likes
           currentUtonomaIdentifier = utonomaIdentifier
           LikeButton.updateUtonomaIdentifier(utonomaIdentifier)
+          DislikeButton.updateUtonomaIdentifier(utonomaIdentifier)
           //Update the url to reflect the current video  
           const { index } = currentUtonomaIdentifier
           const newUrl = `${ window.location.pathname }?watch=${ index }`
@@ -90,6 +94,7 @@ export const ShortVideoReel = ($container) => {
     $buttonNextShortVideo.disabled = boolean
     $buttonPreviousShortVideo.disabled = boolean
     LikeButton.loading(boolean)
+    DislikeButton.loading(boolean)
   }
 
   $buttonNextShortVideo.addEventListener('click', async() => {
